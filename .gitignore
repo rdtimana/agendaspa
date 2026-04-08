@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+npm-debug.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Common development environment patterns
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+.env
+*.env
