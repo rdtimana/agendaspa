@@ -1,0 +1,22 @@
+name: PR ws-objects → migracion
+
+on:
+    push:
+        branches:
+            - desarrollo/feature/ws-objects
+
+jobs:
+    create-pr:
+        runs-on: ubunto-latest
+        
+        steps:
+            - name: Checkout repository
+              uses: actions/Checkout@v3
+              
+            - name: Crear Pull Request
+              uses: peter-evans/create-pull-request@v5
+              with:
+                token: $ {{ secrets.GITHUB_TOKEN }}
+                base: main
+                head: desarrollo/feature/ws-objects
+                title: "Auto PR: ws-objects → main"
