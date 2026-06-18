@@ -1,4 +1,4 @@
-name: PR ws-objects → migracion
+name: Auto Merge ws-objects -> main
 
 on:
   push:
@@ -10,18 +10,27 @@ permissions:
   pull-requests: write
 
 jobs:
-  create-pr:
+  auto-merge:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Crear Pull Request
-        uses: peter-evans/create-pull-request@v5
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: migracion
-          head: desarrollo/feature/ws-objects
-          title: "Auto PR: ws-objects → migracion"
-          body: "PR generado automáticamente al hacer push en ws-objects"
+          base: main
+          branch: auto-pr-ws-objects
+          title: "Auto Merge ws-objects → main"
+          body: "PR generado automáticamente."
+
+      - name: Habilitar Auto Merge
+        if: steps.cpr.outputs.pull-request-number
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: merge
