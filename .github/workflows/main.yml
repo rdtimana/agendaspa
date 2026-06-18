@@ -7,30 +7,32 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
-  auto-merge:
+  merge:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Crear Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: main
-          branch: auto-pr-ws-objects
-          title: "Auto Merge ws-objects → main"
-          body: "PR generado automáticamente."
+          fetch-depth: 0
 
-      - name: Habilitar Auto Merge
-        if: steps.cpr.outputs.pull-request-number
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: merge
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Obtener todas las ramas
+        run: git fetch origin
+
+      - name: Cambiar a main
+        run: git checkout main
+
+      - name: Intentar merge
+        run: |
+          git merge origin/desarrollo/feature/ws-objects --no-edit
+
+      - name: Push a main
+        run: |
+          git push origin main
